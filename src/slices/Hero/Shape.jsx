@@ -25,7 +25,7 @@ export default function Shapes() {
             blur={1}
             far={9}
           />
-          <Environment preset="studio" />
+          <Environment preset="lobby" />
         </Suspense>
       </Canvas>
     </div>
