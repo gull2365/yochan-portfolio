@@ -12,6 +12,8 @@ export type BiographyProps = SliceComponentProps<Content.BiographySlice>;
  * Component for "Biography" Slices.
  */
 const Biography = ({ slice }: BiographyProps): JSX.Element => {
+  console.log(slice);
+
   return (
     <Bounded
       data-slice-type={slice.slice_type}
@@ -22,7 +24,15 @@ const Biography = ({ slice }: BiographyProps): JSX.Element => {
           {slice.primary.heading}
         </Heading>
         <div className="prose prose-xl prose-slate prose-invert col-start-1">
-          {/* <PrismicRichText field={slice.primary.description} /> */}
+          <PrismicRichText
+            field={[
+              {
+                type: "paragraph",
+                text: slice.primary.description ?? "",
+                spans: [],
+              },
+            ]}
+          />
         </div>
       </div>
     </Bounded>
