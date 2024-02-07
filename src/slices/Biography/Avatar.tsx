@@ -5,6 +5,7 @@ import { PrismicNextImage } from "@prismicio/next";
 import clsx from "clsx";
 import gsap from "gsap";
 import { useEffect, useRef } from "react";
+import { components } from "../index";
 
 type AvaterProps = {
   image: ImageField;
@@ -22,7 +23,44 @@ export default function Avater({ image, className }: AvaterProps) {
         { scale: 0.9, opacity: 1, duration: 1.3, ease: "power4.inOut" }
       );
     });
-  });
+
+    window.onmousemove = (e) => {
+      if (!component.current) return;
+      const componentRect = (
+        component.current as HTMLElement
+      ).getBoundingClientRect();
+
+      const componentCenterX = componentRect.left + componentRect.width / 2;
+
+      let componentPercent = {
+        x: (e.clientX - componentCenterX) / componentRect.width / 2,
+      };
+
+      let distFromCenter = Math.abs(componentPercent.x);
+
+      gsap
+        .timeline({
+          defaults: { duration: 0.5, overwrite: "auto", ease: "power3.out" },
+        })
+        .to(
+          ".avatar",
+          {
+            rotation: gsap.utils.clamp(-2, 2, 5 * componentPercent.x),
+            duration: 0.5,
+          },
+          0
+        )
+        .to(
+          ".highlight",
+          {
+            opacity: distFromCenter - 0.7,
+            x: (-10 + 20) & componentPercent.x,
+            duration: 0.5,
+          },
+          0
+        );
+    };
+  }, []);
 
   return (
     <div ref={component} className={clsx("relative h-full w-full", className)}>
@@ -32,7 +70,7 @@ export default function Avater({ image, className }: AvaterProps) {
           className="avatar-image h-full w-full object-fill"
           imgixParams={{ q: 90 }}
         />
-        <div className="highlight absolute inset-0 hidden w-full scale-110 bg-radient-to-tr from-transparent via white to-transparent opacity-0 md:block"></div>
+        <div className="highlight absolute inset-0 hidden w-full scale-110 bg-radient-to-tr from-transparent via-white to-transparent opacity-0 md:block"></div>
       </div>
     </div>
   );
