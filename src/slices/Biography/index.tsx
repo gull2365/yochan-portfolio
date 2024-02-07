@@ -1,4 +1,5 @@
 import Bounded from "@/components/Bounded";
+import Button from "@/components/Button";
 import Heading from "@/components/Heading";
 import { Content, RichTextField } from "@prismicio/client";
 import { PrismicRichText, SliceComponentProps } from "@prismicio/react";
@@ -12,8 +13,6 @@ export type BiographyProps = SliceComponentProps<Content.BiographySlice>;
  * Component for "Biography" Slices.
  */
 const Biography = ({ slice }: BiographyProps): JSX.Element => {
-  console.log(slice);
-
   return (
     <Bounded
       data-slice-type={slice.slice_type}
@@ -34,6 +33,10 @@ const Biography = ({ slice }: BiographyProps): JSX.Element => {
             ]}
           />
         </div>
+        <Button
+          linkField={slice.primary.button_link}
+          label={slice.primary.button_text}
+        />
       </div>
     </Bounded>
   );
