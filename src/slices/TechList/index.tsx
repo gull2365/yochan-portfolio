@@ -27,7 +27,6 @@ const TechList = ({ slice }: TechListProps): JSX.Element => {
       const timeLine = gsap.timeline({
         scrollTrigger: {
           trigger: component.current,
-          markers: true,
           start: "top bottom",
           end: "bottom top",
           scrub: 11,
