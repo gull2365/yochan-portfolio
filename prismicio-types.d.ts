@@ -378,6 +378,51 @@ export type BiographySlice = prismic.SharedSlice<
 >;
 
 /**
+ * Primary content in *ContentIndex → Primary*
+ */
+export interface ContentIndexSliceDefaultPrimary {
+  /**
+   * Heading field in *ContentIndex → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_index.primary.heading
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  heading: prismic.KeyTextField;
+
+  /**
+   * Content Type field in *ContentIndex → Primary*
+   *
+   * - **Field Type**: Select
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_index.primary.content_type
+   * - **Documentation**: https://prismic.io/docs/field#select
+   */
+  content_type: prismic.SelectField<"Blog" | "Project">;
+
+  /**
+   * Description field in *ContentIndex → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_index.primary.description
+   * - **Documentation**: https://prismic.io/docs/field#rich-text-title
+   */
+  description: prismic.RichTextField;
+
+  /**
+   * Fallback Item Image field in *ContentIndex → Primary*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_index.primary.fallback_item_image
+   * - **Documentation**: https://prismic.io/docs/field#image
+   */
+  fallback_item_image: prismic.ImageField<never>;
+}
+
+/**
  * Default variation for ContentIndex Slice
  *
  * - **API ID**: `default`
@@ -386,7 +431,7 @@ export type BiographySlice = prismic.SharedSlice<
  */
 export type ContentIndexSliceDefault = prismic.SharedSliceVariation<
   "default",
-  Record<string, never>,
+  Simplify<ContentIndexSliceDefaultPrimary>,
   never
 >;
 
@@ -564,6 +609,7 @@ declare module "@prismicio/client" {
       BiographySliceVariation,
       BiographySliceDefault,
       ContentIndexSlice,
+      ContentIndexSliceDefaultPrimary,
       ContentIndexSliceVariation,
       ContentIndexSliceDefault,
       HeroSlice,
