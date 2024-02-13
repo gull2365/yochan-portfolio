@@ -610,6 +610,16 @@ export interface ContentIndexSliceDefaultPrimary {
   description: prismic.RichTextField;
 
   /**
+   * ViewMoreText field in *ContentIndex → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: content_index.primary.viewmoretext
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  viewmoretext: prismic.KeyTextField;
+
+  /**
    * Fallback Item Image field in *ContentIndex → Primary*
    *
    * - **Field Type**: Image
