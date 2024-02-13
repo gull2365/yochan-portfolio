@@ -1,9 +1,11 @@
 "use client";
 
-import { Content, isFilled } from "@prismicio/client";
+import { Content, asImageSrc, isFilled } from "@prismicio/client";
 import Link from "next/link";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { MdArrowOutward } from "react-icons/md";
+import { useEffect } from "react";
+import gsap from "gsap";
 
 type ContentListProps = {
   items: Content.BlogPostDocument[] | Content.ProjectDocument[];
@@ -19,14 +21,80 @@ export default function ContentList({
   viewMoreText = "Read More",
 }: ContentListProps) {
   const component = useRef(null);
+  const revealRef = useRef(null);
+  const [currentItem, setCurrentItem] = useState<null | number>(null);
+
   const urlPrefix = contentType === "Blog" ? "/blog" : "/project";
+
+  const lastMousePosition = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const mousePosition = { x: e.clientX, y: e.clientY + window.scrollY };
+
+      const speed = Math.sqrt(
+        Math.pow(mousePosition.x - lastMousePosition.current.x, 2)
+      );
+
+      let ctx = gsap.context(() => {
+        if (currentItem !== null) {
+          const maxY = window.scrollY + window.innerHeight - 350;
+          const maxX = window.innerWidth - 250;
+
+          gsap.to(revealRef.current, {
+            x: gsap.utils.clamp(0, maxX, mousePosition.x - 110),
+            y: gsap.utils.clamp(0, maxY, mousePosition.y - 160),
+            rotation:
+              speed * (mousePosition.x > lastMousePosition.current.x ? 1 : -1),
+            ease: "back.out(2)",
+            duration: 1.3,
+          });
+        }
+        lastMousePosition.current = mousePosition;
+        return () => ctx.revert();
+      }, component);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [currentItem]);
+
+  const contentImages = items.map((item) => {
+    const image = isFilled.image(item.data.hover_image)
+      ? item.data.hover_image
+      : fallbackItemImage;
+    return asImageSrc(image, {
+      fit: "crop",
+      w: 220,
+      h: 320,
+      exp: -10,
+    });
+  });
+
+  const onMouseEnter = (index: number) => {
+    setCurrentItem(index);
+  };
+
+  const onMouseLeave = () => {
+    setCurrentItem(null);
+  };
   return (
-    <div>
-      <ul className="grid border-b border-b-slate-100">
+    <div ref={component}>
+      <ul
+        className="grid border-b border-b-slate-100"
+        onMouseLeave={onMouseLeave}
+      >
         {items.map((item, index) => (
           <>
             {isFilled.keyText(item.data.title) && (
-              <li key={index} className="list-item opacity-0f">
+              <li
+                key={index}
+                className="list-item opacity-0f"
+                onMouseEnter={() => onMouseEnter(index)}
+              >
                 <Link
                   href={urlPrefix + "/" + item.uid}
                   className="flex flex-col justify-between border-t border-t-slate-100 py-10 text-slate-200 md:flex-row"
@@ -51,6 +119,14 @@ export default function ContentList({
           </>
         ))}
       </ul>
+      <div
+        className="hover-reveal pointer-events-none absolute lef-0 top-0 -z-10 h-[320px] w-[220px] rounded-lg bg-over bg-center opacity-0f transition-[background] duration-300"
+        style={{
+          backgroundImage:
+            currentItem !== null ? `url(${contentImages[currentItem]})` : "",
+        }}
+        ref={revealRef}
+      ></div>
     </div>
   );
 }
