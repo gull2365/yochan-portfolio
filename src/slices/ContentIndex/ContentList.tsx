@@ -6,6 +6,9 @@ import React, { useRef, useState } from "react";
 import { MdArrowOutward } from "react-icons/md";
 import { useEffect } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 type ContentListProps = {
   items: Content.BlogPostDocument[] | Content.ProjectDocument[];
@@ -22,11 +25,34 @@ export default function ContentList({
 }: ContentListProps) {
   const component = useRef(null);
   const revealRef = useRef(null);
+  const itemsRef = useRef<Array<HTMLLIElement | null>>([]);
   const [currentItem, setCurrentItem] = useState<null | number>(null);
 
   const urlPrefix = contentType === "Blog" ? "/blog" : "/project";
 
   const lastMousePosition = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    let ctx = gsap.context(() => {
+      itemsRef.current.forEach((item) => {
+        gsap.fromTo(
+          item,
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.3,
+            ScrollTrigger: {
+              trigger: item,
+              start: "top bottom-=100px",
+              end: "bottom center",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      });
+    });
+  });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -48,6 +74,7 @@ export default function ContentList({
               speed * (mousePosition.x > lastMousePosition.current.x ? 1 : -1),
             ease: "back.out(2)",
             duration: 1.3,
+            opacity: 1,
           });
         }
         lastMousePosition.current = mousePosition;
@@ -94,6 +121,7 @@ export default function ContentList({
                 key={index}
                 className="list-item opacity-0f"
                 onMouseEnter={() => onMouseEnter(index)}
+                ref={(element) => (itemsRef.current[index] = element)}
               >
                 <Link
                   href={urlPrefix + "/" + item.uid}
@@ -120,7 +148,7 @@ export default function ContentList({
         ))}
       </ul>
       <div
-        className="hover-reveal pointer-events-none absolute lef-0 top-0 -z-10 h-[320px] w-[220px] rounded-lg bg-over bg-center opacity-0f transition-[background] duration-300"
+        className="hover-reveal pointer-events-none absolute lef-0 top-0 -z-10 h-[320px] w-[220px] rounded-lg bg-over bg-center opacity-0 transition-[background] duration-300"
         style={{
           backgroundImage:
             currentItem !== null ? `url(${contentImages[currentItem]})` : "",
