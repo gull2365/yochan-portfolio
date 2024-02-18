@@ -168,6 +168,7 @@ export type HomepageDocument<Lang extends string = string> =
   >;
 
 type PageDocumentDataSlicesSlice =
+  | CertificateSlice
   | ExperienceSlice
   | ContentIndexSlice
   | TechListSlice
@@ -574,6 +575,76 @@ type BiographySliceVariation = BiographySliceDefault;
 export type BiographySlice = prismic.SharedSlice<
   "biography",
   BiographySliceVariation
+>;
+
+/**
+ * Primary content in *Certificate → Primary*
+ */
+export interface CertificateSliceDefaultPrimary {
+  /**
+   * Heading field in *Certificate → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: certificate.primary.heading
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  heading: prismic.KeyTextField;
+}
+
+/**
+ * Primary content in *Certificate → Items*
+ */
+export interface CertificateSliceDefaultItem {
+  /**
+   * Title field in *Certificate → Items*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: certificate.items[].title
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  title: prismic.KeyTextField;
+
+  /**
+   * Time Period field in *Certificate → Items*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: certificate.items[].time_period
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  time_period: prismic.KeyTextField;
+}
+
+/**
+ * Default variation for Certificate Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slice
+ */
+export type CertificateSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<CertificateSliceDefaultPrimary>,
+  Simplify<CertificateSliceDefaultItem>
+>;
+
+/**
+ * Slice variation for *Certificate*
+ */
+type CertificateSliceVariation = CertificateSliceDefault;
+
+/**
+ * Certificate Shared Slice
+ *
+ * - **API ID**: `certificate`
+ * - **Description**: Certificate
+ * - **Documentation**: https://prismic.io/docs/slice
+ */
+export type CertificateSlice = prismic.SharedSlice<
+  "certificate",
+  CertificateSliceVariation
 >;
 
 /**
@@ -1003,6 +1074,11 @@ declare module "@prismicio/client" {
       BiographySliceDefaultPrimary,
       BiographySliceVariation,
       BiographySliceDefault,
+      CertificateSlice,
+      CertificateSliceDefaultPrimary,
+      CertificateSliceDefaultItem,
+      CertificateSliceVariation,
+      CertificateSliceDefault,
       ContentIndexSlice,
       ContentIndexSliceDefaultPrimary,
       ContentIndexSliceVariation,
