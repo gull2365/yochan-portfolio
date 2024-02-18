@@ -19,7 +19,7 @@ export default async function ContentBody({
         day: "numeric",
       };
       return new Intl.DateTimeFormat("kor-KR", dateOptions).format(
-        new Date(date)
+        new Date(date),
       );
     }
   }
@@ -28,8 +28,10 @@ export default async function ContentBody({
   return (
     <Bounded as="article">
       <div className="rounded-2xl border-2 border-slate-800 bg-slate-900 px-4 py-10 md:px-8 md:py-20">
-        <Heading as="h1">{page.data.title}</Heading>
-        <div className="flex gap-4 text-yellow-400 text-xl font-bold">
+        <Heading as="h1" className="pb-7">
+          {page.data.title}
+        </Heading>
+        <div className="flex gap-4 text-xl font-bold text-yellow-400">
           {page.tags.map((tag) => (
             <span key={tag}>{tag}</span>
           ))}
