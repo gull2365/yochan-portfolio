@@ -21,7 +21,7 @@ const Experience = ({ slice }: ExperienceProps): JSX.Element => {
         {slice.primary.heading}
       </Heading>
       {slice.items.map((item, index) => (
-        <div key={index} className="ml-6 mt-8 max-w-prose md:ml-12 md:mt-16">
+        <div key={index} className="ml-6 mt-8 md:ml-12 md:mt-16">
           <Heading as="h3" size="sm">
             {item.title}
           </Heading>
@@ -31,7 +31,7 @@ const Experience = ({ slice }: ExperienceProps): JSX.Element => {
             <span className="text-3xl font-extralight">/</span>{" "}
             <span>{item.institution}</span>
           </div>
-          <div className="prose prose-lg prose-invert mt-4">
+          <div className="prose-lg prose-invert mt-4">
             <PrismicRichText field={item.description} />
           </div>
         </div>
