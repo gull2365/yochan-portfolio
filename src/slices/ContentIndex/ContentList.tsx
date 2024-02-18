@@ -48,7 +48,7 @@ export default function ContentList({
               end: "bottom center",
               toggleActions: "play none none none",
             },
-          }
+          },
         );
       });
     });
@@ -60,7 +60,7 @@ export default function ContentList({
       const mousePosition = { x: e.clientX, y: e.clientY + window.scrollY };
 
       const speed = Math.sqrt(
-        Math.pow(mousePosition.x - lastMousePosition.current.x, 2)
+        Math.pow(mousePosition.x - lastMousePosition.current.x, 2),
       );
 
       let ctx = gsap.context(() => {
@@ -109,7 +109,7 @@ export default function ContentList({
       img.src = url;
     });
   }, [contentImages]);
-  
+
   const onMouseEnter = (index: number) => {
     setCurrentItem(index);
   };
@@ -128,7 +128,7 @@ export default function ContentList({
             {isFilled.keyText(item.data.title) && (
               <li
                 key={index}
-                className="list-item opacity-0f"
+                className="list-item opacity-0"
                 onMouseEnter={() => onMouseEnter(index)}
                 ref={(element) => (itemsRef.current[index] = element)}
               >
@@ -141,7 +141,7 @@ export default function ContentList({
                     <span className="text-3xl font-bold">
                       {item.data.title}
                     </span>
-                    <div className="flex gap-3 text-yellow-400 text-lg font-bold">
+                    <div className="flex gap-3 text-lg font-bold text-yellow-400">
                       {item.tags.map((tag, index) => (
                         <span key={index}>{tag}</span>
                       ))}
@@ -157,7 +157,7 @@ export default function ContentList({
         ))}
       </ul>
       <div
-        className="hover-reveal pointer-events-none absolute lef-0 top-0 -z-10 h-[320px] w-[220px] rounded-lg bg-over bg-center opacity-0 transition-[background] duration-300"
+        className="hover-reveal lef-0 bg-over pointer-events-none absolute top-0 -z-10 h-[320px] w-[220px] rounded-lg bg-center opacity-0 transition-[background] duration-300"
         style={{
           backgroundImage:
             currentItem !== null ? `url(${contentImages[currentItem]})` : "",
